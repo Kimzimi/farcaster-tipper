@@ -13,7 +13,10 @@
     "react-dom": "19.1.0",
     "next": "15.5.5",
     "@farcaster/frame-sdk": "^0.1.11",
-    "viem": "^2.21.54"
+    "viem": "^2.21.54",
+    "wagmi": "^2.15.0",
+    "@tanstack/react-query": "^5.62.8",
+    "@rainbow-me/rainbowkit": "^2.2.1"
   },
   "devDependencies": {
     "typescript": "^5",
