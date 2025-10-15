@@ -13,20 +13,24 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const baseUrl = process.env.NEXT_PUBLIC_URL || 'https://farcaster-tipperbs.vercel.app';
+
 export const metadata: Metadata = {
   title: "Karma Tipper - Support Creators with Crypto Tips",
   description: "Tip your favorite Farcaster content creators with $DEGEN tokens on Base",
+  metadataBase: new URL(baseUrl),
   openGraph: {
     title: "Karma Tipper",
     description: "Support great content with crypto tips",
-    images: [`${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}/api/og`],
+    images: [`${baseUrl}/api/og`],
+    url: baseUrl,
   },
   other: {
     "fc:frame": "vNext",
-    "fc:frame:image": `${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}/api/og`,
-    "fc:frame:button:1": "✨ Tip 100 DEGEN",
+    "fc:frame:image": `${baseUrl}/api/og`,
+    "fc:frame:button:1": "✨ Open Karma Tipper",
     "fc:frame:button:1:action": "link",
-    "fc:frame:button:1:target": `${process.env.NEXT_PUBLIC_URL || 'http://localhost:3000'}`,
+    "fc:frame:button:1:target": baseUrl,
   },
 };
 
