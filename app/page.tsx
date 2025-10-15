@@ -65,18 +65,6 @@ export default function Home() {
     }
   }, [isConnected, chain, switchChain]);
 
-  const handleConnect = async (connector: typeof connectors[0]) => {
-    try {
-      console.log('Connecting to:', connector.name);
-      const result = await connect({ connector, chainId: base.id });
-      console.log('Connection result:', result);
-      setShowWalletModal(false);
-    } catch (error) {
-      console.error('Connection failed:', error);
-      alert('Failed to connect wallet. Please try again.');
-    }
-  };
-
   const handleTip = async () => {
     if (!isConnected) {
       alert('Please connect your wallet first');
@@ -353,23 +341,32 @@ export default function Home() {
               <h2 className="text-2xl font-bold text-gray-800 mb-2">Connect Wallet</h2>
               <p className="text-sm text-gray-600 mb-6">Choose your preferred wallet to continue</p>
               <div className="space-y-3">
-                {connectors
-                  .filter((connector) =>
-                    ['Coinbase Wallet', 'MetaMask', 'Rabby Wallet'].includes(connector.name)
-                  )
-                  .map((connector) => (
+                {connectors.map((connector, index) => {
+                  // Show only specific wallets
+                  if (!['Coinbase Wallet', 'MetaMask', 'Rabby Wallet'].includes(connector.name)) {
+                    return null;
+                  }
+
+                  return (
                     <button
-                      key={connector.uid}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleConnect(connector);
-                      }}
-                      disabled={!connector.ready}
+                      key={`${connector.uid}-${index}`}
                       type="button"
-                      className="w-full py-4 px-6 rounded-xl font-bold text-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:shadow-xl hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-between group cursor-pointer"
+                      onClick={async () => {
+                        console.log('Button clicked!', connector.name);
+                        try {
+                          setShowWalletModal(false);
+                          await new Promise(resolve => setTimeout(resolve, 200));
+                          await connect({ connector, chainId: base.id });
+                          console.log('Connected!');
+                        } catch (error) {
+                          console.error('Error:', error);
+                          setShowWalletModal(true);
+                        }
+                      }}
+                      className="w-full py-4 px-6 rounded-xl font-bold text-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center justify-between group"
+                      style={{ WebkitTapHighlightColor: 'transparent' }}
                     >
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-3 pointer-events-none">
                         <span className="text-2xl">
                           {connector.name === 'Coinbase Wallet' && '🔵'}
                           {connector.name === 'MetaMask' && '🦊'}
@@ -377,9 +374,10 @@ export default function Home() {
                         </span>
                         <span>{connector.name}</span>
                       </div>
-                      <span className="text-white group-hover:translate-x-1 transition-transform">→</span>
+                      <span className="text-white group-hover:translate-x-1 transition-transform pointer-events-none">→</span>
                     </button>
-                  ))}
+                  );
+                })}
               </div>
               <p className="text-xs text-gray-500 text-center mt-4">
                 By connecting, you agree to our Terms of Service
