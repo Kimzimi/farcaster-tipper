@@ -67,10 +67,13 @@ export default function Home() {
 
   const handleConnect = async (connector: typeof connectors[0]) => {
     try {
-      await connect({ connector, chainId: base.id });
+      console.log('Connecting to:', connector.name);
+      const result = await connect({ connector, chainId: base.id });
+      console.log('Connection result:', result);
       setShowWalletModal(false);
     } catch (error) {
       console.error('Connection failed:', error);
+      alert('Failed to connect wallet. Please try again.');
     }
   };
 
@@ -333,36 +336,50 @@ export default function Home() {
 
         {/* Wallet Selection Modal */}
         {showWalletModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 relative animate-in fade-in zoom-in duration-200">
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+            onClick={() => setShowWalletModal(false)}
+          >
+            <div
+              className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 relative"
+              onClick={(e) => e.stopPropagation()}
+            >
               <button
                 onClick={() => setShowWalletModal(false)}
-                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl"
+                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-3xl leading-none"
               >
                 ×
               </button>
               <h2 className="text-2xl font-bold text-gray-800 mb-2">Connect Wallet</h2>
               <p className="text-sm text-gray-600 mb-6">Choose your preferred wallet to continue</p>
               <div className="space-y-3">
-                {connectors.map((connector) => (
-                  <button
-                    key={connector.uid}
-                    onClick={() => handleConnect(connector)}
-                    disabled={!connector.ready}
-                    className="w-full py-4 px-6 rounded-xl font-bold text-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:shadow-xl hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-between group"
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl">
-                        {connector.name === 'Coinbase Wallet' && '🔵'}
-                        {connector.name === 'MetaMask' && '🦊'}
-                        {connector.name === 'WalletConnect' && '🌐'}
-                        {!['Coinbase Wallet', 'MetaMask', 'WalletConnect'].includes(connector.name) && '👛'}
-                      </span>
-                      <span>{connector.name}</span>
-                    </div>
-                    <span className="text-white group-hover:translate-x-1 transition-transform">→</span>
-                  </button>
-                ))}
+                {connectors
+                  .filter((connector) =>
+                    ['Coinbase Wallet', 'MetaMask', 'Rabby Wallet'].includes(connector.name)
+                  )
+                  .map((connector) => (
+                    <button
+                      key={connector.uid}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleConnect(connector);
+                      }}
+                      disabled={!connector.ready}
+                      type="button"
+                      className="w-full py-4 px-6 rounded-xl font-bold text-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:shadow-xl hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-between group cursor-pointer"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl">
+                          {connector.name === 'Coinbase Wallet' && '🔵'}
+                          {connector.name === 'MetaMask' && '🦊'}
+                          {connector.name === 'Rabby Wallet' && '🐰'}
+                        </span>
+                        <span>{connector.name}</span>
+                      </div>
+                      <span className="text-white group-hover:translate-x-1 transition-transform">→</span>
+                    </button>
+                  ))}
               </div>
               <p className="text-xs text-gray-500 text-center mt-4">
                 By connecting, you agree to our Terms of Service
