@@ -4,19 +4,14 @@ const baseUrl = process.env.NEXT_PUBLIC_URL || 'https://farcaster-tipperbs.verce
 
 export async function GET() {
   const manifest = {
-    accountAssociation: {
-      header: "eyJmaWQiOjEsInR5cGUiOiJjdXN0b2R5Iiwia2V5IjoiMHgwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwIn0",
-      payload: "eyJkb21haW4iOiJmYXJjYXN0ZXItdGlwcGVyYnMudmVyY2VsLmFwcCJ9",
-      signature: "MHg..."
-    },
     frame: {
       version: "next",
       name: "Karma Tipper",
-      iconUrl: `${baseUrl}/api/og`,
+      iconUrl: `${baseUrl}/icon.png`,
       homeUrl: `${baseUrl}/`,
       imageUrl: `${baseUrl}/api/og`,
       buttonTitle: "Open Karma Tipper",
-      splashImageUrl: `${baseUrl}/api/og`,
+      splashImageUrl: `${baseUrl}/splash.png`,
       splashBackgroundColor: "#9333ea",
       webhookUrl: `${baseUrl}/api/webhook`
     }
