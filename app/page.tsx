@@ -33,6 +33,7 @@ export default function Home() {
   const [context, setContext] = useState<FrameContext | null>(null);
   const [tipAmount, setTipAmount] = useState(100);
   const [recipientAddress, setRecipientAddress] = useState('');
+  const [showWalletModal, setShowWalletModal] = useState(false);
 
   // Wagmi hooks
   const { address, isConnected, chain } = useAccount();
@@ -51,7 +52,7 @@ export default function Home() {
         setIsSDKLoaded(true);
       } catch (error) {
         console.error('Failed to initialize SDK:', error);
-        setIsSDKLoaded(true); // Allow to continue even if SDK fails
+        setIsSDKLoaded(true);
       }
     };
     load();
@@ -67,6 +68,7 @@ export default function Home() {
   const handleConnect = async (connector: typeof connectors[0]) => {
     try {
       await connect({ connector, chainId: base.id });
+      setShowWalletModal(false);
     } catch (error) {
       console.error('Connection failed:', error);
     }
@@ -121,7 +123,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-orange-500 flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full">
+      <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full relative">
         {/* Header */}
         <div className="text-center mb-8">
           <div className="text-6xl mb-4">✨</div>
@@ -155,28 +157,17 @@ export default function Home() {
         {/* Wallet Connection Status */}
         <div className="mb-6">
           {!isConnected ? (
-            <div className="space-y-3">
+            <div>
               <p className="text-sm font-semibold text-gray-700 mb-3 text-center">
                 🔗 Connect Your Wallet to Send Tips
               </p>
-              <div className="space-y-2">
-                {connectors.map((connector) => (
-                  <button
-                    key={connector.uid}
-                    onClick={() => handleConnect(connector)}
-                    disabled={!connector.ready}
-                    className="w-full py-4 px-6 rounded-xl font-bold text-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:shadow-xl hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                  >
-                    <span className="text-2xl">
-                      {connector.name === 'Coinbase Wallet' && '🔵'}
-                      {connector.name === 'MetaMask' && '🦊'}
-                      {connector.name === 'WalletConnect' && '🌐'}
-                      {!['Coinbase Wallet', 'MetaMask', 'WalletConnect'].includes(connector.name) && '👛'}
-                    </span>
-                    Connect {connector.name}
-                  </button>
-                ))}
-              </div>
+              <button
+                onClick={() => setShowWalletModal(true)}
+                className="w-full py-4 px-6 rounded-xl font-bold text-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:shadow-xl hover:scale-105 transition-all flex items-center justify-center gap-2"
+              >
+                <span className="text-2xl">👛</span>
+                Connect Wallet
+              </button>
             </div>
           ) : (
             <div>
@@ -339,6 +330,46 @@ export default function Home() {
           <p>3. Send DEGEN tokens on Base chain</p>
           <p className="mt-3 text-purple-600 font-semibold">Support creators you love! 💜</p>
         </div>
+
+        {/* Wallet Selection Modal */}
+        {showWalletModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 relative animate-in fade-in zoom-in duration-200">
+              <button
+                onClick={() => setShowWalletModal(false)}
+                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-2xl"
+              >
+                ×
+              </button>
+              <h2 className="text-2xl font-bold text-gray-800 mb-2">Connect Wallet</h2>
+              <p className="text-sm text-gray-600 mb-6">Choose your preferred wallet to continue</p>
+              <div className="space-y-3">
+                {connectors.map((connector) => (
+                  <button
+                    key={connector.uid}
+                    onClick={() => handleConnect(connector)}
+                    disabled={!connector.ready}
+                    className="w-full py-4 px-6 rounded-xl font-bold text-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:shadow-xl hover:scale-105 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-between group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">
+                        {connector.name === 'Coinbase Wallet' && '🔵'}
+                        {connector.name === 'MetaMask' && '🦊'}
+                        {connector.name === 'WalletConnect' && '🌐'}
+                        {!['Coinbase Wallet', 'MetaMask', 'WalletConnect'].includes(connector.name) && '👛'}
+                      </span>
+                      <span>{connector.name}</span>
+                    </div>
+                    <span className="text-white group-hover:translate-x-1 transition-transform">→</span>
+                  </button>
+                ))}
+              </div>
+              <p className="text-xs text-gray-500 text-center mt-4">
+                By connecting, you agree to our Terms of Service
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
