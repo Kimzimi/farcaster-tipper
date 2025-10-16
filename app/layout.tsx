@@ -28,8 +28,9 @@ export const metadata: Metadata = {
   other: {
     "fc:frame": "vNext",
     "fc:frame:image": `${baseUrl}/api/og`,
-    "fc:frame:button:1": "✨ Open Karma Tipper",
-    "fc:frame:button:1:action": "link",
+    "fc:frame:image:aspect_ratio": "1.91:1",
+    "fc:frame:button:1": "✨ Open App",
+    "fc:frame:button:1:action": "launch_frame",
     "fc:frame:button:1:target": baseUrl,
   },
 };
