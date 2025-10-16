@@ -29,9 +29,12 @@ export const metadata: Metadata = {
     "fc:frame": "vNext",
     "fc:frame:image": `${baseUrl}/api/og`,
     "fc:frame:image:aspect_ratio": "1.91:1",
-    "fc:frame:button:1": "✨ Open App",
-    "fc:frame:button:1:action": "launch_frame",
-    "fc:frame:button:1:target": baseUrl,
+    "fc:frame:button:1": "✨ Send Tip",
+    "fc:frame:button:1:action": "post",
+    "fc:frame:button:1:target": `${baseUrl}/api/frame`,
+    "fc:frame:button:2": "🌐 Open Full App",
+    "fc:frame:button:2:action": "launch_frame",
+    "fc:frame:button:2:target": baseUrl,
   },
 };
 
@@ -43,18 +46,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <meta property="fc:frame" content="vNext" />
-        <meta property="fc:frame:image" content={`${baseUrl}/api/og`} />
-        <meta property="fc:frame:image:aspect_ratio" content="1.91:1" />
-        <meta property="fc:frame:button:1" content="✨ Send Tip" />
-        <meta property="fc:frame:button:1:action" content="post" />
-        <meta property="fc:frame:button:1:target" content={`${baseUrl}/api/frame`} />
-        <meta property="fc:frame:button:2" content="🌐 Open Full App" />
-        <meta property="fc:frame:button:2:action" content="launch_frame" />
-        <meta property="fc:frame:button:2:target" content={baseUrl} />
-        <meta property="og:image" content={`${baseUrl}/api/og`} />
-        <meta property="og:title" content="Karma Tipper" />
-        <meta property="og:description" content="Support great content with crypto tips" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
