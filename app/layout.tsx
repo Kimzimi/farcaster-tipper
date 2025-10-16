@@ -46,9 +46,12 @@ export default function RootLayout({
         <meta property="fc:frame" content="vNext" />
         <meta property="fc:frame:image" content={`${baseUrl}/api/og`} />
         <meta property="fc:frame:image:aspect_ratio" content="1.91:1" />
-        <meta property="fc:frame:button:1" content="✨ Open App" />
-        <meta property="fc:frame:button:1:action" content="launch_frame" />
-        <meta property="fc:frame:button:1:target" content={baseUrl} />
+        <meta property="fc:frame:button:1" content="✨ Send Tip" />
+        <meta property="fc:frame:button:1:action" content="post" />
+        <meta property="fc:frame:button:1:target" content={`${baseUrl}/api/frame`} />
+        <meta property="fc:frame:button:2" content="🌐 Open Full App" />
+        <meta property="fc:frame:button:2:action" content="launch_frame" />
+        <meta property="fc:frame:button:2:target" content={baseUrl} />
         <meta property="og:image" content={`${baseUrl}/api/og`} />
         <meta property="og:title" content="Karma Tipper" />
         <meta property="og:description" content="Support great content with crypto tips" />
