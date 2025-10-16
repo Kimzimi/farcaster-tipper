@@ -46,13 +46,16 @@ export default function Home() {
   useEffect(() => {
     const load = async () => {
       try {
-        await sdk.actions.ready();
         const ctx = await sdk.context;
         setContext(ctx as FrameContext);
         setIsSDKLoaded(true);
+        // Call ready() after setting context
+        sdk.actions.ready();
       } catch (error) {
         console.error('Failed to initialize SDK:', error);
         setIsSDKLoaded(true);
+        // Still call ready() even on error to dismiss splash
+        sdk.actions.ready();
       }
     };
     load();
